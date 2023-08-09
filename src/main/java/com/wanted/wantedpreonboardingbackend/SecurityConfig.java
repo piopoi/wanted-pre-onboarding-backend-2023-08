@@ -1,9 +1,9 @@
-package com.wanted.wantedpreonboardingbackend.config;
+package com.wanted.wantedpreonboardingbackend;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-import com.wanted.wantedpreonboardingbackend.auth.application.JwtAuthenticationFilter;
-import com.wanted.wantedpreonboardingbackend.auth.application.JwtTokenProvider;
+import com.wanted.wantedpreonboardingbackend.auth.infrastructure.JwtAuthenticationFilter;
+import com.wanted.wantedpreonboardingbackend.auth.infrastructure.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,11 +33,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorizeHttpRequest -> authorizeHttpRequest
-                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers(new AntPathRequestMatcher("/post/**")).authenticated()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)

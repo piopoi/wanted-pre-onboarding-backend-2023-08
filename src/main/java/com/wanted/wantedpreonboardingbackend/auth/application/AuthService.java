@@ -2,6 +2,7 @@ package com.wanted.wantedpreonboardingbackend.auth.application;
 
 import com.wanted.wantedpreonboardingbackend.auth.dto.TokenRequest;
 import com.wanted.wantedpreonboardingbackend.auth.dto.TokenResponse;
+import com.wanted.wantedpreonboardingbackend.auth.infrastructure.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

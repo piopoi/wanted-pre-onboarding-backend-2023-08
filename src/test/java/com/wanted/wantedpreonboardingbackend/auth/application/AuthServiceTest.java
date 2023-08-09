@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.wanted.wantedpreonboardingbackend.auth.dto.TokenRequest;
 import com.wanted.wantedpreonboardingbackend.auth.dto.TokenResponse;
+import com.wanted.wantedpreonboardingbackend.auth.infrastructure.JwtTokenProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +32,7 @@ public class AuthServiceTest {
     private Authentication authentication;
 
     @Test
-    @DisplayName("이메일로 로그인 할 수 있다")
+    @DisplayName("로그인 할 수 있다")
     void login() {
         // Given
         TokenRequest tokenRequest = new TokenRequest("test@example.com", "password");

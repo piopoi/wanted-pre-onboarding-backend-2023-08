@@ -1,5 +1,6 @@
-package com.wanted.wantedpreonboardingbackend.auth.application;
+package com.wanted.wantedpreonboardingbackend.auth.infrastructure;
 
+import com.wanted.wantedpreonboardingbackend.auth.application.CustomUserDetailService;
 import com.wanted.wantedpreonboardingbackend.auth.dto.TokenResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -11,8 +12,6 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
 import jakarta.xml.bind.DatatypeConverter;
 import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -32,10 +29,14 @@ public class JwtTokenProvider {
     private final long expirationTimeMillis;
     private final Key key;
 
+    private final CustomUserDetailService customUserDetailService;
+
     public JwtTokenProvider(
+            CustomUserDetailService customUserDetailService,
             @Value("${security.jwt.token.secret-key}") String secretKey,
             @Value("${security.jwt.token.expire-length}") long expirationTimeMillis
     ) {
+        this.customUserDetailService = customUserDetailService;
         byte[] secretByteKey = DatatypeConverter.parseBase64Binary(secretKey);
         this.key = Keys.hmacShaKeyFor(secretByteKey);
         this.expirationTimeMillis = expirationTimeMillis;
@@ -57,15 +58,8 @@ public class JwtTokenProvider {
         if (claims.get("auth") == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
-
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get("auth").toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .toList();
-
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(claims.getSubject());
+        return new UsernamePasswordAuthenticationToken(userDetails, accessToken, userDetails.getAuthorities());
     }
 
     public boolean validateToken(String token) {

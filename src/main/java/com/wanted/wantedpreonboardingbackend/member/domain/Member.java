@@ -1,23 +1,19 @@
 package com.wanted.wantedpreonboardingbackend.member.domain;
 
-import com.wanted.wantedpreonboardingbackend.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.util.Collection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @ToString
 @Getter
-public class Member extends BaseEntity implements UserDetails {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +25,9 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String role = Role.USER.getValue();
+
     public Member() {
     }
 
@@ -37,6 +36,12 @@ public class Member extends BaseEntity implements UserDetails {
         validateEmail(email);
         validatePassword(password);
 
+        this.email = email;
+        this.password = password;
+    }
+
+    public Member(Long id, String email, String password) {
+        this.id = id;
         this.email = email;
         this.password = password;
     }
@@ -58,37 +63,21 @@ public class Member extends BaseEntity implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Member member = (Member) o;
+
+        return id.equals(member.id);
     }
 
     @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public int hashCode() {
+        return id.hashCode();
     }
 }

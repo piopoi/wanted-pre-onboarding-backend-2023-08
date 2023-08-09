@@ -1,10 +1,11 @@
 package com.wanted.wantedpreonboardingbackend.member.ui;
 
 import com.wanted.wantedpreonboardingbackend.ControllerTest;
-import com.wanted.wantedpreonboardingbackend.member.dto.MemberRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,15 +30,14 @@ public class MemberControllerTest extends ControllerTest {
     }
 
     public static ExtractableResponse<Response> 회원_생성을_요청(String email, String password) {
-        MemberRequest memberRequest = MemberRequest.builder()
-                .email(email)
-                .password(password)
-                .build();
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
 
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(memberRequest)
+                .body(params)
                 .when().post("/member")
                 .then().log().all()
                 .extract();

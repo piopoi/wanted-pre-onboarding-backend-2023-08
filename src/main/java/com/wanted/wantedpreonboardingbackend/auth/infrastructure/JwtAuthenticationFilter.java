@@ -1,4 +1,4 @@
-package com.wanted.wantedpreonboardingbackend.auth.application;
+package com.wanted.wantedpreonboardingbackend.auth.infrastructure;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
