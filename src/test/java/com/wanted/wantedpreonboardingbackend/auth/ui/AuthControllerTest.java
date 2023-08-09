@@ -7,6 +7,7 @@ import com.wanted.wantedpreonboardingbackend.auth.dto.TokenRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ public class AuthControllerTest extends ControllerTest {
 
     @Test
     @DisplayName("이메일로 로그인 할 수 있다")
-    public void loginMember() {
+    public void login() {
         //given
         ExtractableResponse<Response> createdMemberResponse = 회원_생성을_요청(EMAIL, PASSWORD);
         응답결과_확인(createdMemberResponse, HttpStatus.CREATED);
@@ -35,6 +36,24 @@ public class AuthControllerTest extends ControllerTest {
 
         //then
         응답결과_확인(loginResponse, HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("잘못된 형식의 이메일로 로그인 할 수 없다.")
+    void invalidEmail_login() {
+        //when then
+        Assertions.assertThatThrownBy(() -> 이메일_로그인_요청("test.wanted.com", PASSWORD))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이메일 주소 형식에 맞게 입력해주세요.");
+    }
+
+    @Test
+    @DisplayName("잘못된 형식의 비밀번호로 로그인 할 수 없다.")
+    void invalidPassword_login() {
+        //when then
+        Assertions.assertThatThrownBy(() -> 이메일_로그인_요청(EMAIL, "123456"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("8자 이상의 비밀번호를 사용해주세요.");
     }
 
     public static ExtractableResponse<Response> 이메일_로그인_요청(String email, String password) {
