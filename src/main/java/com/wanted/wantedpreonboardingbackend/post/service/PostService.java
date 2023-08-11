@@ -28,15 +28,21 @@ public class PostService {
         return PostResponse.of(createdPost);
     }
 
-    private Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-    }
-
     public List<PostResponse> findPosts(Pageable pageable) {
         List<Post> posts = postRepository.findAll(pageable).getContent();
         return posts.stream()
                 .map(PostResponse::of)
                 .toList();
+    }
+
+    public PostResponse findPost(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+        return PostResponse.of(post);
+    }
+
+    private Member findMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
     }
 }

@@ -50,11 +50,11 @@ class MemberServiceTest {
         given(memberRepository.save(any())).willReturn(member);
 
         //when
-        MemberResponse createdMember = memberService.createMember(memberRequest);
+        MemberResponse memberResponse = memberService.createMember(memberRequest);
 
         //then
-        assertThat(createdMember.getId()).isEqualTo(member.getId());
-        assertThat(createdMember.getEmail()).isEqualTo(member.getEmail());
+        assertThat(memberResponse.getId()).isEqualTo(member.getId());
+        assertThat(memberResponse.getEmail()).isEqualTo(member.getEmail());
     }
 
     @Test

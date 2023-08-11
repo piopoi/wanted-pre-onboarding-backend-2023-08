@@ -86,14 +86,33 @@ class PostControllerTest extends ControllerTest {
 
         //when
         ExtractableResponse<Response> response = 글_목록_조회_요청(token);
-        List<PostResponse> posts = Arrays.asList(response.body().as(PostResponse[].class));
 
         //then
         응답결과_확인(response, HttpStatus.OK);
-        assertThat(posts).hasSize(5);
-        assertThat(posts.get(0).getId()).isEqualTo(10L);
-        assertThat(posts.get(0).getTitle()).isEqualTo("제목10");
-        assertThat(posts.get(0).getContent()).isEqualTo("내용10");
+        List<PostResponse> postResponses = Arrays.asList(response.body().as(PostResponse[].class));
+        assertThat(postResponses).hasSize(5);
+        assertThat(postResponses.get(0).getId()).isEqualTo(1L);
+        assertThat(postResponses.get(0).getTitle()).isEqualTo("제목1");
+        assertThat(postResponses.get(0).getContent()).isEqualTo("내용1");
+    }
+
+    @Test
+    @DisplayName("id로 글을 조회할 수 있다.")
+    void findPost() {
+        //given
+        PostRequest post = PostRequest.builder()
+                .title("제목")
+                .content("내용")
+                .build();
+        PostResponse createdPostResponse = postService.createPost(post, 1L);
+
+        //when
+        ExtractableResponse<Response> response = 글_조회_요청(token, createdPostResponse.getId());
+
+        //then
+        응답결과_확인(response, HttpStatus.OK);
+        PostResponse postResponse = response.body().as(PostResponse.class);
+        assertThat(postResponse.getId()).isEqualTo(1L);
     }
 
     public static ExtractableResponse<Response> 글_생성_요청(String token, String title, String content) {
@@ -117,6 +136,16 @@ class PostControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Bearer " + token)
                 .when().get("/posts?page=0&size=5")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 글_조회_요청(String token, Long postId) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + token)
+                .when().get("/post/" + postId)
                 .then().log().all()
                 .extract();
     }
