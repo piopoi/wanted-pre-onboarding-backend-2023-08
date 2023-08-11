@@ -42,6 +42,11 @@ public class Post {
         this.member = member;
     }
 
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

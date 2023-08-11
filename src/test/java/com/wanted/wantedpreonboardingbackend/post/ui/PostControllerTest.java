@@ -100,14 +100,10 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("id로 글을 조회할 수 있다.")
     void findPost() {
         //given
-        PostRequest post = PostRequest.builder()
-                .title("제목")
-                .content("내용")
-                .build();
-        PostResponse createdPostResponse = postService.createPost(post, 1L);
+        ExtractableResponse<Response> createResponse = 글_생성_요청(token, "제목", "내용");
 
         //when
-        ExtractableResponse<Response> response = 글_조회_요청(token, createdPostResponse.getId());
+        ExtractableResponse<Response> response = 글_조회_요청(token, createResponse);
 
         //then
         응답결과_확인(response, HttpStatus.OK);
@@ -116,17 +112,26 @@ class PostControllerTest extends ControllerTest {
     }
 
     @Test
-    @DisplayName("id로 글을 삭제할 수 있다.")
-    void deletePost() {
+    @DisplayName("작성자는 id로 글을 수정할 수 있다.")
+    void updatePost() {
         //given
-        PostRequest post = PostRequest.builder()
-                .title("제목")
-                .content("내용")
-                .build();
-        PostResponse createdPostResponse = postService.createPost(post, 1L);
+        ExtractableResponse<Response> createResponse = 글_생성_요청(token, "제목", "내용");
 
         //when
-        ExtractableResponse<Response> response = 글_삭제_요청(token, createdPostResponse.getId());
+        ExtractableResponse<Response> updateResponse = 글_수정_요청(token, createResponse, "수정된 제목", "수정된 내용");
+
+        //then
+        응답결과_확인(updateResponse, HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("작성자는 id로 글을 삭제할 수 있다.")
+    void deletePost() {
+        //given
+        ExtractableResponse<Response> createResponse = 글_생성_요청(token, "제목", "내용");
+
+        //when
+        ExtractableResponse<Response> response = 글_삭제_요청(token, createResponse);
 
         //then
         응답결과_확인(response, HttpStatus.NO_CONTENT);
@@ -157,22 +162,46 @@ class PostControllerTest extends ControllerTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 글_조회_요청(String token, Long postId) {
+    public static ExtractableResponse<Response> 글_조회_요청(String token, ExtractableResponse<Response> response) {
+        String uri = response.header("Location");
+
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Bearer " + token)
-                .when().get("/post/" + postId)
+                .when().get(uri)
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 글_삭제_요청(String token, Long postId) {
+    public static ExtractableResponse<Response> 글_수정_요청(String token,
+                                                        ExtractableResponse<Response> response,
+                                                        String title,
+                                                        String content) {
+        String uri = response.header("Location");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("title", title);
+        params.put("content", content);
+
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Bearer " + token)
-                .when().delete("/post/" + postId)
+                .body(params)
+                .when().put(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 글_삭제_요청(String token, ExtractableResponse<Response> response) {
+        String uri = response.header("Location");
+
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + token)
+                .when().delete(uri)
                 .then().log().all()
                 .extract();
     }

@@ -116,7 +116,62 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("id로 글을 삭제할 수 있다.")
+    @DisplayName("작성자는 id로 글을 수정할 수 있다.")
+    void updatePost() {
+        //given
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+        String updatedTitle = "수정된 제목";
+        String updatedContent = "수정된 내용";
+        PostRequest updateRequest = PostRequest.builder()
+                .title(updatedTitle)
+                .content(updatedContent)
+                .build();
+
+        //when
+        PostResponse postResponse = postService.updatePost(post.getId(), member.getId(), updateRequest);
+
+        //then
+        assertThat(postResponse.getId()).isEqualTo(post.getId());
+        assertThat(postResponse.getTitle()).isEqualTo(updatedTitle);
+        assertThat(postResponse.getContent()).isEqualTo(updatedContent);
+        assertThat(postResponse.getMemberId()).isEqualTo(member.getId());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 글은 수정할 수 없다.")
+    void invalidPostId_updatePost() {
+        //given
+        Long invalidPostId = 99L;
+        PostRequest postRequest = PostRequest.builder()
+                .title("수정된 제목")
+                .content("수정된 내용")
+                .build();
+
+        //when then
+        assertThatThrownBy(() -> postService.updatePost(invalidPostId, member.getId(), postRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 글입니다.");
+    }
+
+    @Test
+    @DisplayName("작성자가 아니면 글은 수정할 수 없다.")
+    void invalidMemberId_updatePost() {
+        //given
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+        Long invalidMemberId = 2L;
+        PostRequest postRequest = PostRequest.builder()
+                .title("수정된 제목")
+                .content("수정된 내용")
+                .build();
+
+        //when then
+        assertThatThrownBy(() -> postService.updatePost(post.getId(), invalidMemberId, postRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("권한이 없습니다.");
+    }
+
+    @Test
+    @DisplayName("작성자는 id로 글을 삭제할 수 있다.")
     void deletePost() {
         //given
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
@@ -139,6 +194,7 @@ class PostServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 글입니다.");
     }
+
     @Test
     @DisplayName("작성자가 아니면 글은 삭제할 수 없다.")
     void invalidMemberId_deletePost() {

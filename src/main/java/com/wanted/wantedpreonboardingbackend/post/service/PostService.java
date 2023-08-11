@@ -42,8 +42,18 @@ public class PostService {
         return PostResponse.of(post);
     }
 
+    public PostResponse updatePost(Long postId, Long memberId, PostRequest postRequest) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+        validatePostRegister(post.getMember().getId(), memberId);
+        post.update(postRequest.getTitle(), postRequest.getContent());
+        return PostResponse.of(post);
+    }
+
     public void deletePost(Long postId, Long memberId) {
-        validatePostRegister(postId, memberId);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+        validatePostRegister(post.getMember().getId(), memberId);
         postRepository.deleteById(postId);
     }
 
@@ -52,8 +62,7 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
     }
 
-    private void validatePostRegister(Long postId, Long memberId) {
-        Long postMemberId = findPost(postId).getMemberId();
+    private void validatePostRegister(Long postMemberId, Long memberId) {
         if(!Objects.equals(postMemberId, memberId)) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
