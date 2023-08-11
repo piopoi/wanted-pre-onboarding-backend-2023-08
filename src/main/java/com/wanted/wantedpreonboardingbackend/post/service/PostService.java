@@ -7,6 +7,7 @@ import com.wanted.wantedpreonboardingbackend.post.dto.PostRequest;
 import com.wanted.wantedpreonboardingbackend.post.dto.PostResponse;
 import com.wanted.wantedpreonboardingbackend.post.repository.PostRepository;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,8 +42,20 @@ public class PostService {
         return PostResponse.of(post);
     }
 
+    public void deletePost(Long postId, Long memberId) {
+        validatePostRegister(postId, memberId);
+        postRepository.deleteById(postId);
+    }
+
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+    }
+
+    private void validatePostRegister(Long postId, Long memberId) {
+        Long postMemberId = findPost(postId).getMemberId();
+        if(!Objects.equals(postMemberId, memberId)) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
     }
 }

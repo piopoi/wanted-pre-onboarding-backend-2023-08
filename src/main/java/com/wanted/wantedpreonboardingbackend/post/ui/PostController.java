@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +29,7 @@ public class PostController {
     @PostMapping("/post")
     public ResponseEntity<Void> createPost(@AuthenticationPrincipal LoginMember loginMember,
                                            @RequestBody @Valid PostRequest postRequest) {
-        Member member = loginMember.getMember();
-        PostResponse postResponse = postService.createPost(postRequest, member.getId());
+        PostResponse postResponse = postService.createPost(postRequest, loginMember.getMember().getId());
         return ResponseEntity.created(URI.create("/post/" + postResponse.getId())).build();
     }
 
@@ -44,5 +44,12 @@ public class PostController {
     public ResponseEntity<PostResponse> findPost(@PathVariable Long id) {
         PostResponse postResponse = postService.findPost(id);
         return ResponseEntity.ok().body(postResponse);
+    }
+
+    @DeleteMapping("/post/{id}")
+    public ResponseEntity<Void> deletePost(@AuthenticationPrincipal LoginMember loginMember,
+                                           @PathVariable Long id) {
+        postService.deletePost(id, loginMember.getMember().getId());
+        return ResponseEntity.noContent().build();
     }
 }

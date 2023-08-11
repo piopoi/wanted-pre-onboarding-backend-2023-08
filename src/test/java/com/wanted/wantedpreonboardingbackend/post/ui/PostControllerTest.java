@@ -115,6 +115,23 @@ class PostControllerTest extends ControllerTest {
         assertThat(postResponse.getId()).isEqualTo(1L);
     }
 
+    @Test
+    @DisplayName("id로 글을 삭제할 수 있다.")
+    void deletePost() {
+        //given
+        PostRequest post = PostRequest.builder()
+                .title("제목")
+                .content("내용")
+                .build();
+        PostResponse createdPostResponse = postService.createPost(post, 1L);
+
+        //when
+        ExtractableResponse<Response> response = 글_삭제_요청(token, createdPostResponse.getId());
+
+        //then
+        응답결과_확인(response, HttpStatus.NO_CONTENT);
+    }
+
     public static ExtractableResponse<Response> 글_생성_요청(String token, String title, String content) {
         Map<String, String> params = new HashMap<>();
         params.put("title", title);
@@ -146,6 +163,16 @@ class PostControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Bearer " + token)
                 .when().get("/post/" + postId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 글_삭제_요청(String token, Long postId) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + token)
+                .when().delete("/post/" + postId)
                 .then().log().all()
                 .extract();
     }

@@ -1,6 +1,7 @@
 package com.wanted.wantedpreonboardingbackend.post.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -59,13 +60,7 @@ class PostServiceTest {
     void createPost() {
         //given
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
-        post = Post.builder()
-                .title("제목")
-                .content("내용")
-                .member(member)
-                .build();
         given(postRepository.save(any())).willReturn(post);
-        setField(post, "id", 1L);
         PostRequest postRequest = PostRequest.builder()
                 .title("제목")
                 .content("내용")
@@ -110,12 +105,6 @@ class PostServiceTest {
     @DisplayName("id로 글을 조회할 수 있다.")
     void findPost() {
         //given
-        Post post = Post.builder()
-                .title("제목")
-                .content("내용")
-                .member(member)
-                .build();
-        setField(post, "id", 1L);
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
 
         //when
@@ -124,5 +113,42 @@ class PostServiceTest {
         //then
         assertThat(postResponse).isNotNull();
         assertThat(postResponse.getId()).isEqualTo(post.getId());
+    }
+
+    @Test
+    @DisplayName("id로 글을 삭제할 수 있다.")
+    void deletePost() {
+        //given
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+
+        //when
+        postService.deletePost(post.getId(), member.getId());
+
+        //then
+        assertThat(postRepository.findAll()).hasSize(0);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 글은 삭제할 수 없다.")
+    void invalidPostId_deletePost() {
+        //given
+        Long invalidPostId = 99L;
+
+        //when then
+        assertThatThrownBy(() -> postService.deletePost(invalidPostId, member.getId()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 글입니다.");
+    }
+    @Test
+    @DisplayName("작성자가 아니면 글은 삭제할 수 없다.")
+    void invalidMemberId_deletePost() {
+        //given
+        Long invalidMemberId = 2L;
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+
+        //when then
+        assertThatThrownBy(() -> postService.deletePost(post.getId(), invalidMemberId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("권한이 없습니다.");
     }
 }
