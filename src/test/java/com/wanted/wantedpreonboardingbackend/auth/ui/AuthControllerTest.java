@@ -1,16 +1,13 @@
 package com.wanted.wantedpreonboardingbackend.auth.ui;
 
-import static com.wanted.wantedpreonboardingbackend.member.ui.MemberControllerTest.회원_생성을_요청;
-import static org.assertj.core.api.Assertions.*;
+import static com.wanted.wantedpreonboardingbackend.member.ui.MemberControllerTest.회원_생성_요청;
 
 import com.wanted.wantedpreonboardingbackend.ControllerTest;
-import com.wanted.wantedpreonboardingbackend.auth.dto.TokenRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.HashMap;
 import java.util.Map;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +28,7 @@ public class AuthControllerTest extends ControllerTest {
     @DisplayName("로그인 할 수 있다")
     public void login() {
         //given
-        ExtractableResponse<Response> createdMemberResponse = 회원_생성을_요청(EMAIL, PASSWORD);
+        ExtractableResponse<Response> createdMemberResponse = 회원_생성_요청(EMAIL, PASSWORD);
         응답결과_확인(createdMemberResponse, HttpStatus.CREATED);
 
         //when

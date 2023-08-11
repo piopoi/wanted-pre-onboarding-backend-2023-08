@@ -23,13 +23,13 @@ public class MemberControllerTest extends ControllerTest {
     @DisplayName("사용자를 생성할 수 있다.")
     void createMember() {
         //given when
-        ExtractableResponse<Response> response = 회원_생성을_요청("test@abc.com", "12345678");
+        ExtractableResponse<Response> response = 회원_생성_요청("test@abc.com", "12345678");
 
         //then
         응답결과_확인(response, HttpStatus.CREATED);
     }
 
-    public static ExtractableResponse<Response> 회원_생성을_요청(String email, String password) {
+    public static ExtractableResponse<Response> 회원_생성_요청(String email, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("password", password);

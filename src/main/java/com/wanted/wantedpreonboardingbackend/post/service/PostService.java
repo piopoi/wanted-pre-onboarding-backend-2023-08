@@ -6,7 +6,9 @@ import com.wanted.wantedpreonboardingbackend.post.domain.Post;
 import com.wanted.wantedpreonboardingbackend.post.dto.PostRequest;
 import com.wanted.wantedpreonboardingbackend.post.dto.PostResponse;
 import com.wanted.wantedpreonboardingbackend.post.repository.PostRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,5 +31,12 @@ public class PostService {
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+    }
+
+    public List<PostResponse> findPosts(Pageable pageable) {
+        List<Post> posts = postRepository.findAll(pageable).getContent();
+        return posts.stream()
+                .map(PostResponse::of)
+                .toList();
     }
 }

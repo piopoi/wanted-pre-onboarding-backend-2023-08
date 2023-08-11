@@ -2,23 +2,34 @@ package com.wanted.wantedpreonboardingbackend.post.ui;
 
 
 import static com.wanted.wantedpreonboardingbackend.auth.ui.AuthControllerTest.로그인_요청;
-import static com.wanted.wantedpreonboardingbackend.member.ui.MemberControllerTest.회원_생성을_요청;
+import static com.wanted.wantedpreonboardingbackend.member.ui.MemberControllerTest.회원_생성_요청;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wanted.wantedpreonboardingbackend.ControllerTest;
+import com.wanted.wantedpreonboardingbackend.post.dto.PostRequest;
+import com.wanted.wantedpreonboardingbackend.post.dto.PostResponse;
+import com.wanted.wantedpreonboardingbackend.post.service.PostService;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 class PostControllerTest extends ControllerTest {
 
     private String token;
+
+    @Autowired
+    private PostService postService;
 
     @BeforeEach
     public void setUp() {
@@ -27,10 +38,9 @@ class PostControllerTest extends ControllerTest {
         final String EMAIL = "test@abc.com";
         final String PASSWORD = "12345678";
 
-        회원_생성을_요청(EMAIL, PASSWORD);
+        회원_생성_요청(EMAIL, PASSWORD);
         ExtractableResponse<Response> response = 로그인_요청(EMAIL, PASSWORD);
         token = response.jsonPath().getString("accessToken");
-        System.out.println("### token = " + token);
     }
 
     @Test
@@ -63,6 +73,29 @@ class PostControllerTest extends ControllerTest {
         응답결과_확인(response, HttpStatus.BAD_REQUEST);
     }
 
+    @Test
+    @DisplayName("글 목록을 조회할 수 있다.")
+    void findPosts() {
+        //given
+        IntStream.range(1, 11)
+                .mapToObj(i -> PostRequest.builder()
+                        .title("제목" + i)
+                        .content("내용" + i)
+                        .build())
+                .forEach(postRequest -> postService.createPost(postRequest, 1L));
+
+        //when
+        ExtractableResponse<Response> response = 글_목록_조회_요청(token);
+        List<PostResponse> posts = Arrays.asList(response.body().as(PostResponse[].class));
+
+        //then
+        응답결과_확인(response, HttpStatus.OK);
+        assertThat(posts).hasSize(5);
+        assertThat(posts.get(0).getId()).isEqualTo(10L);
+        assertThat(posts.get(0).getTitle()).isEqualTo("제목10");
+        assertThat(posts.get(0).getContent()).isEqualTo("내용10");
+    }
+
     public static ExtractableResponse<Response> 글_생성_요청(String token, String title, String content) {
         Map<String, String> params = new HashMap<>();
         params.put("title", title);
@@ -74,6 +107,16 @@ class PostControllerTest extends ControllerTest {
                 .header("Authorization", "Bearer " + token)
                 .body(params)
                 .when().post("/post")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 글_목록_조회_요청(String token) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + token)
+                .when().get("/posts?page=0&size=5")
                 .then().log().all()
                 .extract();
     }

@@ -11,10 +11,16 @@ import lombok.Getter;
 public class PostResponse {
 
     private Long id;
+    private String title;
+    private String content;
+    private Long memberId;
 
     public static PostResponse of(Post post) {
         return PostResponse.builder()
                 .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .memberId(post.getMember().getId())
                 .build();
     }
 }
