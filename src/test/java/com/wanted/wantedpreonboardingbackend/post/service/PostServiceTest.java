@@ -1,5 +1,6 @@
 package com.wanted.wantedpreonboardingbackend.post.service;
 
+import static com.wanted.wantedpreonboardingbackend.post.constants.PostConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -150,7 +151,7 @@ class PostServiceTest {
         //when then
         assertThatThrownBy(() -> postService.updatePost(invalidPostId, member.getId(), postRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 글입니다.");
+                .hasMessage(POST_NOT_EXISTS);
     }
 
     @Test
@@ -167,7 +168,7 @@ class PostServiceTest {
         //when then
         assertThatThrownBy(() -> postService.updatePost(post.getId(), invalidMemberId, postRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("권한이 없습니다.");
+                .hasMessage(POST_NO_AUTH);
     }
 
     @Test
@@ -192,7 +193,7 @@ class PostServiceTest {
         //when then
         assertThatThrownBy(() -> postService.deletePost(invalidPostId, member.getId()))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 글입니다.");
+                .hasMessage(POST_NOT_EXISTS);
     }
 
     @Test
@@ -205,6 +206,6 @@ class PostServiceTest {
         //when then
         assertThatThrownBy(() -> postService.deletePost(post.getId(), invalidMemberId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("권한이 없습니다.");
+                .hasMessage(POST_NO_AUTH);
     }
 }

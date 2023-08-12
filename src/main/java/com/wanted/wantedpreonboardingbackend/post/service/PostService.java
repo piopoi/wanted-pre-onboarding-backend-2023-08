@@ -1,5 +1,9 @@
 package com.wanted.wantedpreonboardingbackend.post.service;
 
+import static com.wanted.wantedpreonboardingbackend.member.constants.MemberConstants.MEMBER_NOT_EXISTS;
+import static com.wanted.wantedpreonboardingbackend.post.constants.PostConstants.POST_NOT_EXISTS;
+import static com.wanted.wantedpreonboardingbackend.post.constants.PostConstants.POST_NO_AUTH;
+
 import com.wanted.wantedpreonboardingbackend.member.domain.Member;
 import com.wanted.wantedpreonboardingbackend.member.repository.MemberRepository;
 import com.wanted.wantedpreonboardingbackend.post.domain.Post;
@@ -38,13 +42,13 @@ public class PostService {
 
     public PostResponse findPost(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXISTS));
         return PostResponse.of(post);
     }
 
     public PostResponse updatePost(Long postId, Long memberId, PostRequest postRequest) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXISTS));
         validatePostRegister(post.getMember().getId(), memberId);
         post.update(postRequest.getTitle(), postRequest.getContent());
         return PostResponse.of(post);
@@ -52,19 +56,19 @@ public class PostService {
 
     public void deletePost(Long postId, Long memberId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXISTS));
         validatePostRegister(post.getMember().getId(), memberId);
         postRepository.deleteById(postId);
     }
 
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_EXISTS));
     }
 
     private void validatePostRegister(Long postMemberId, Long memberId) {
         if(!Objects.equals(postMemberId, memberId)) {
-            throw new IllegalArgumentException("권한이 없습니다.");
+            throw new IllegalArgumentException(POST_NO_AUTH);
         }
     }
 }

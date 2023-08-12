@@ -1,5 +1,6 @@
 package com.wanted.wantedpreonboardingbackend.member.domain;
 
+import static com.wanted.wantedpreonboardingbackend.member.constants.MemberConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -35,7 +36,7 @@ class MemberTest {
         //expected
         assertThatThrownBy(() -> new Member(invalidEmail, PASSWORD))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이메일 주소 형식에 맞게 입력해주세요.");
+                .hasMessage(MEMBER_EMAIL_INVALID);
     }
 
     @Test
@@ -47,6 +48,6 @@ class MemberTest {
         //expected
         assertThatThrownBy(() -> new Member(EMAIL, invalidPassword))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("8자 이상의 비밀번호를 사용해주세요.");
+                .hasMessage(MEMBER_PASSWORD_LENGTH_MIN);
     }
 }

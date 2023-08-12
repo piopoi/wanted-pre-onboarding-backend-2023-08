@@ -1,6 +1,10 @@
 package com.wanted.wantedpreonboardingbackend.auth.dto;
 
+import static com.wanted.wantedpreonboardingbackend.auth.AuthConstants.*;
+
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,30 +13,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TokenRequest {
 
-    @NotNull(message = "이메일을 입력해주세요.")
+    @NotNull(message = AUTH_EMAIL_EMPTY)
+    @Email(message = AUTH_EMAIL_INVALID)
     private String email;
 
-    @NotNull(message = "비밀번호를 입력해주세요.")
+    @NotNull(message = AUTH_PASSWORD_EMPTY)
+    @Size(min = 8, message = AUTH_PASSWORD_LENGTH_MIN)
     private String password;
 
     @Builder
     public TokenRequest(String email, String password) {
-        validateEmail(email);
-        validatePassword(password);
-
         this.email = email;
         this.password = password;
-    }
-
-    private void validateEmail(String email) {
-        if (!email.contains("@")) {
-            throw new IllegalArgumentException("이메일 주소 형식에 맞게 입력해주세요.");
-        }
-    }
-
-    private void validatePassword(String password) {
-        if (password.length() < 8) {
-            throw new IllegalArgumentException("8자 이상의 비밀번호를 사용해주세요.");
-        }
     }
 }

@@ -1,5 +1,8 @@
 package com.wanted.wantedpreonboardingbackend.post.dto;
 
+import static com.wanted.wantedpreonboardingbackend.post.constants.PostConstants.POST_EMPTY_CONTENT;
+import static com.wanted.wantedpreonboardingbackend.post.constants.PostConstants.POST_EMPTY_TITLE;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,9 +13,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PostRequest {
 
-    @NotBlank(message = "제목을 입력해주세요.")
+    @NotBlank(message = POST_EMPTY_TITLE)
     private String title;
 
-    @NotBlank(message = "내용을 입력해주세요.")
+    @NotBlank(message = POST_EMPTY_CONTENT)
     private String content;
 }

@@ -1,5 +1,7 @@
 package com.wanted.wantedpreonboardingbackend.member.domain;
 
+import static com.wanted.wantedpreonboardingbackend.member.constants.MemberConstants.*;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,7 +27,7 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String role = Role.USER.getValue();
 
     public Member() {
@@ -52,13 +54,13 @@ public class Member {
 
     private void validateEmail(String email) {
         if (!email.contains("@")) {
-            throw new IllegalArgumentException("이메일 주소 형식에 맞게 입력해주세요.");
+            throw new IllegalArgumentException(MEMBER_EMAIL_INVALID);
         }
     }
 
     private void validatePassword(String password) {
         if (password.length() < 8) {
-            throw new IllegalArgumentException("8자 이상의 비밀번호를 사용해주세요.");
+            throw new IllegalArgumentException(MEMBER_PASSWORD_LENGTH_MIN);
         }
     }
 

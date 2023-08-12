@@ -1,5 +1,6 @@
 package com.wanted.wantedpreonboardingbackend.member.application;
 
+import static com.wanted.wantedpreonboardingbackend.member.constants.MemberConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.any;
@@ -66,7 +67,7 @@ class MemberServiceTest {
         //when then
         assertThatThrownBy(() -> memberService.createMember(memberRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이메일 주소 형식에 맞게 입력해주세요.");
+                .hasMessage(MEMBER_EMAIL_INVALID);
     }
 
     @Test
@@ -89,7 +90,7 @@ class MemberServiceTest {
         //when then
         assertThatThrownBy(() -> memberService.createMember(memberRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("8자 이상의 비밀번호를 사용해주세요.");
+                .hasMessage(MEMBER_PASSWORD_LENGTH_MIN);
     }
 
     @Test

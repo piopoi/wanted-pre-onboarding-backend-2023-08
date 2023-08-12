@@ -1,5 +1,7 @@
 package com.wanted.wantedpreonboardingbackend.auth.infrastructure;
 
+import static com.wanted.wantedpreonboardingbackend.auth.AuthConstants.*;
+
 import com.wanted.wantedpreonboardingbackend.auth.application.CustomUserDetailService;
 import com.wanted.wantedpreonboardingbackend.auth.dto.TokenResponse;
 import io.jsonwebtoken.Claims;
@@ -56,7 +58,7 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken); //토큰 복호화
         if (claims.get("auth") == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+            throw new RuntimeException(AUTH_JWT_TOKEN_UNPRIVILEGED);
         }
         UserDetails userDetails = customUserDetailService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(userDetails, accessToken, userDetails.getAuthorities());
@@ -70,13 +72,13 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
+            log.info(AUTH_JWT_TOKEN_INVALID, e);
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
+            log.info(AUTH_JWT_TOKEN_EXPIRED, e);
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
+            log.info(AUTH_JWT_TOKEN_UNSUPPORTED, e);
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
+            log.info(AUTH_JWT_CLAIMS_EMPTY, e);
         }
         return false;
     }

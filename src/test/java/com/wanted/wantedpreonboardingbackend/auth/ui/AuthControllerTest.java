@@ -45,7 +45,7 @@ public class AuthControllerTest extends ControllerTest {
         ExtractableResponse<Response> loginResponse = 로그인_요청("test.wanted.com", PASSWORD);
 
         //then
-        응답결과_확인(loginResponse, HttpStatus.UNAUTHORIZED);
+        응답결과_확인(loginResponse, HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class AuthControllerTest extends ControllerTest {
         ExtractableResponse<Response> loginResponse = 로그인_요청(EMAIL, "01234");
 
         //then
-        응답결과_확인(loginResponse, HttpStatus.UNAUTHORIZED);
+        응답결과_확인(loginResponse, HttpStatus.BAD_REQUEST);
     }
 
     public static ExtractableResponse<Response> 로그인_요청(String email, String password) {

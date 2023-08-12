@@ -1,5 +1,6 @@
 package com.wanted.wantedpreonboardingbackend.auth.application;
 
+import com.wanted.wantedpreonboardingbackend.auth.AuthConstants;
 import com.wanted.wantedpreonboardingbackend.auth.domain.LoginMember;
 import com.wanted.wantedpreonboardingbackend.member.domain.Member;
 import com.wanted.wantedpreonboardingbackend.member.repository.MemberRepository;
@@ -18,7 +19,7 @@ public class CustomUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new UsernameNotFoundException(AuthConstants.AUTH_MEMBER_NOT_EXISTS));
         return new LoginMember(member);
     }
 }
