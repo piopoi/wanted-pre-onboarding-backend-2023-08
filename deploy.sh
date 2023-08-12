@@ -44,17 +44,6 @@ function build() {
   ./gradlew clean build
 }
 
-## 프로세스 종료
-function killProcess() {
-  echo -e ""
-  echo -e "${txtylw}>> Kill Process${txtrst}"
-  CURRENT_PID=$(pgrep -f subway)
-  if [[ $CURRENT_PID -gt 0 ]]; then
-    echo -e "kill $CURRENT_PID"
-    kill -2 $CURRENT_PID
-  fi
-}
-
 # docker conatiner delete
 function deleteDockerContainer() {
   echo -e ""
@@ -67,7 +56,6 @@ function deleteDockerContainer() {
   docker rmi -f mysql:8.0.34
 }
 
-
 ## docker image build & docker compose up
 function dockerComposeUp() {
   echo -e ""
@@ -76,28 +64,28 @@ function dockerComposeUp() {
 }
 
 ## main
-MAIN_DFF=$(check_dff);
+MAIN_DFF=$(check_dff); ## github branch 변경 체크
 if [[ $MAIN_DFF == 1 ]]; then
   echo -e "Repository is changed."
-  pull;
+  pull; ## 저장소 pull
 else
   echo -e "Repository is not changed."
 fi
 echo -e ""
 
-if [[ $MAIN_DFF == 0 ]]; then
-  exit 0
-fi
-echo -e ""
+# git repository 변경사항 없으면 배포 스크립트 종료.
+#if [[ $MAIN_DFF == 0 ]]; then
+#  exit 0
+#fi
+#echo -e ""
 
 ## gradle build
 build;
 
-## 프로세스 종료
-#killProcess;
-
-## Docker
+# docker conatiner delete
 deleteDockerContainer;
+
+## docker image build & docker compose up
 dockerComposeUp;
 
 echo -e "${txtylw}=======================================${txtrst}"

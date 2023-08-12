@@ -22,6 +22,8 @@ services:
   application:
     container_name: wanted_app
     build: .
+    volumes:
+      - ./logs:/app/logs
     ports:
       - "8080:8080"
     depends_on:
