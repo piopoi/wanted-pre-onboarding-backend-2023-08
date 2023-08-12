@@ -4,10 +4,10 @@ import com.wanted.wantedpreonboardingbackend.member.domain.Member;
 import com.wanted.wantedpreonboardingbackend.member.dto.MemberRequest;
 import com.wanted.wantedpreonboardingbackend.member.dto.MemberResponse;
 import com.wanted.wantedpreonboardingbackend.member.repository.MemberRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional

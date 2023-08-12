@@ -3,7 +3,7 @@ package com.wanted.wantedpreonboardingbackend.post.ui;
 import com.wanted.wantedpreonboardingbackend.auth.domain.LoginMember;
 import com.wanted.wantedpreonboardingbackend.post.dto.PostRequest;
 import com.wanted.wantedpreonboardingbackend.post.dto.PostResponse;
-import com.wanted.wantedpreonboardingbackend.post.service.PostService;
+import com.wanted.wantedpreonboardingbackend.post.application.PostService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;

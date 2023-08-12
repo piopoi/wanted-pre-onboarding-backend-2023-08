@@ -1,4 +1,4 @@
-package com.wanted.wantedpreonboardingbackend.post.service;
+package com.wanted.wantedpreonboardingbackend.post.application;
 
 import static com.wanted.wantedpreonboardingbackend.post.constants.PostConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.wanted.wantedpreonboardingbackend.ControllerTest;
 import com.wanted.wantedpreonboardingbackend.post.dto.PostRequest;
 import com.wanted.wantedpreonboardingbackend.post.dto.PostResponse;
-import com.wanted.wantedpreonboardingbackend.post.service.PostService;
+import com.wanted.wantedpreonboardingbackend.post.application.PostService;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

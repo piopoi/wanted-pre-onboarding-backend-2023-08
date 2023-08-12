@@ -1,4 +1,4 @@
-package com.wanted.wantedpreonboardingbackend.post.service;
+package com.wanted.wantedpreonboardingbackend.post.application;
 
 import static com.wanted.wantedpreonboardingbackend.member.constants.MemberConstants.MEMBER_NOT_EXISTS;
 import static com.wanted.wantedpreonboardingbackend.post.constants.PostConstants.POST_NOT_EXISTS;
@@ -15,8 +15,10 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PostService {
 
@@ -33,6 +35,7 @@ public class PostService {
         return PostResponse.of(createdPost);
     }
 
+    @Transactional(readOnly = true)
     public List<PostResponse> findPosts(Pageable pageable) {
         List<Post> posts = postRepository.findAll(pageable).getContent();
         return posts.stream()
@@ -40,6 +43,7 @@ public class PostService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public PostResponse findPost(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXISTS));
