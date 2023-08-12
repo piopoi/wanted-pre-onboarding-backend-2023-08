@@ -32,7 +32,9 @@ cd [프로젝트 경로]
 <br>
 
 ## 데이터베이스 테이블 구조
-![db_diagram](docs/db_diagram.png){: height="200"}
+
+[//]: # (![db_diagram]&#40;docs/db_diagram.png&#41;)
+<img src="docs/db_diagram.png" width="300"/>
 <br>
 
 ## 구현한 API의 동작을 촬영한 데모 영상 링크
