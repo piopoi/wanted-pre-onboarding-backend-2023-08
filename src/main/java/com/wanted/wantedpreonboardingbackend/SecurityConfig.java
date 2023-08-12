@@ -34,6 +34,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeHttpRequest -> authorizeHttpRequest
                         .requestMatchers(new AntPathRequestMatcher("/post/**")).authenticated()
+                        .requestMatchers(new AntPathRequestMatcher("/posts")).authenticated()
                         .anyRequest().permitAll()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
