@@ -53,7 +53,7 @@ function deleteDockerContainer() {
   docker rm -f wanted_db
   echo -e "=> Remove previous image..."
   docker rmi -f wanted-pre-onboarding-backend-application
-  docker rmi -f mysql:8.0.34
+#  docker rmi -f mysql:8.0.34
 }
 
 ## docker image build & docker compose up
