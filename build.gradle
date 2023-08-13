@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.2'
 	id 'io.spring.dependency-management' version '1.1.2'
+	id "org.asciidoctor.jvm.convert" version "3.3.2" //REST Docs
 }
 
 group = 'com.wanted'
@@ -19,10 +20,16 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	asciidoctorExt //REST Docs
 }
 
 repositories {
 	mavenCentral()
+}
+
+ext {
+	//REST Docs
+	snippetsDir = file('build/generated-snippets')
 }
 
 dependencies {
@@ -50,9 +57,51 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.rest-assured:rest-assured:5.3.1'
 
+	//REST Docs
+	asciidoctorExt "org.springframework.restdocs:spring-restdocs-asciidoctor:3.0.0"
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc:3.0.0'
+	testImplementation "org.springframework.restdocs:spring-restdocs-restassured:3.0.0"
+
 	implementation 'com.google.guava:guava:32.1.2-jre'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+test {
+	outputs.dir snippetsDir //REST Docs
+}
+
+//REST Docs
+asciidoctor {
+	dependsOn test
+	configurations 'asciidoctorExt'
+	inputs.dir snippetsDir
+	baseDirFollowsSourceFile()
+}
+
+//REST Docs
+asciidoctor.doFirst {
+	delete file('src/main/resources/static/docs')
+}
+
+//REST Docs
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor
+	from file("build/docs/asciidoc")
+	into file("src/main/resources/static/docs")
+}
+
+//REST Docs
+build {
+	dependsOn copyDocument
+}
+
+//REST Docs
+bootJar {
+	dependsOn asciidoctor
+	from("${asciidoctor.outputDir}") {
+		into 'static/docs'
+	}
 }

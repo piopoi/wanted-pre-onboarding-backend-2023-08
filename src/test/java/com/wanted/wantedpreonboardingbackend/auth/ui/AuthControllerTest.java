@@ -1,6 +1,9 @@
 package com.wanted.wantedpreonboardingbackend.auth.ui;
 
 import static com.wanted.wantedpreonboardingbackend.member.ui.MemberControllerTest.회원_생성_요청;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
 import com.wanted.wantedpreonboardingbackend.ControllerTest;
 import io.restassured.RestAssured;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
 
 public class AuthControllerTest extends ControllerTest {
 
@@ -20,8 +24,8 @@ public class AuthControllerTest extends ControllerTest {
     public static final String PASSWORD = "12345678";
 
     @BeforeEach
-    public void setUp() {
-        super.setUp();
+    public void setUp(RestDocumentationContextProvider restDocumentation) {
+        super.setUp(restDocumentation);
     }
 
     @Test
@@ -64,7 +68,13 @@ public class AuthControllerTest extends ControllerTest {
         params.put("password", password);
 
         return RestAssured
-                .given().log().all()
+                .given(spec).log().all()
+                .filter(document("auth/login",
+                        requestFields(
+                                fieldWithPath("email").description("사용자 아이디"),
+                                fieldWithPath("password").description("사용자 비밀번호")
+                        )
+                ))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(params)
                 .when().post("/login")

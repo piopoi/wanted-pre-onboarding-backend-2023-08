@@ -1,5 +1,9 @@
 package com.wanted.wantedpreonboardingbackend.member.ui;
 
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
+
 import com.wanted.wantedpreonboardingbackend.ControllerTest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -11,12 +15,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
 
 public class MemberControllerTest extends ControllerTest {
 
     @BeforeEach
-    public void setUp() {
-        super.setUp();
+    public void setUp(RestDocumentationContextProvider restDocumentation) {
+        super.setUp(restDocumentation);
     }
 
     @Test
@@ -35,7 +40,13 @@ public class MemberControllerTest extends ControllerTest {
         params.put("password", password);
 
         return RestAssured
-                .given().log().all()
+                .given(spec).log().all()
+                .filter(document("member/create-member",
+                        requestFields(
+                                fieldWithPath("email").description("사용자 아이디"),
+                                fieldWithPath("password").description("사용자 비밀번호")
+                        )
+                ))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(params)
                 .when().post("/member")

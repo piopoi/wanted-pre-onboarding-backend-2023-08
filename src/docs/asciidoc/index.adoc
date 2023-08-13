@@ -1,0 +1,58 @@
+= API Documentation
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 사용자 생성
+=== 요청
+include::{snippets}/member/create-member/http-request.adoc[]
+include::{snippets}/member/create-member/request-fields.adoc[]
+=== 응답
+include::{snippets}/member/create-member/http-response.adoc[]
+
+== 로그인
+=== 요청
+include::{snippets}/auth/login/http-request.adoc[]
+include::{snippets}/auth/login/request-fields.adoc[]
+=== 응답
+include::{snippets}/auth/login/http-response.adoc[]
+
+== 글 등록
+=== 요청
+include::{snippets}/post/create-post/http-request.adoc[]
+include::{snippets}/post/create-post/request-fields.adoc[]
+=== 응답
+include::{snippets}/post/create-post/http-response.adoc[]
+
+== 글 목록 조회
+=== 요청
+include::{snippets}/post/find-post-list/http-request.adoc[]
+=== 응답
+include::{snippets}/post/find-post-list/http-response.adoc[]
+include::{snippets}/post/find-post-list/response-fields.adoc[]
+
+== 글 단건 조회
+=== 요청
+include::{snippets}/post/find-post/http-request.adoc[]
+include::{snippets}/post/find-post/path-parameters.adoc[]
+=== 응답
+include::{snippets}/post/find-post/http-response.adoc[]
+include::{snippets}/post/find-post/response-fields.adoc[]
+
+== 글 수정
+=== 요청
+include::{snippets}/post/update-post/http-request.adoc[]
+include::{snippets}/post/update-post/path-parameters.adoc[]
+include::{snippets}/post/update-post/request-fields.adoc[]
+=== 응답
+include::{snippets}/post/update-post/http-response.adoc[]
+
+== 글 삭제
+=== 요청
+include::{snippets}/post/delete-post/http-request.adoc[]
+include::{snippets}/post/delete-post/path-parameters.adoc[]
+=== 응답
+include::{snippets}/post/delete-post/http-response.adoc[]
