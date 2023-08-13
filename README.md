@@ -46,3 +46,6 @@ cd [프로젝트 경로]
 <br>
 
 ## API 명세(request/response 포함)
+[API Documentation 바로가기](https://htmlpreview.github.io/?https://github.com/piopoi/wanted-pre-onboarding-backend/blob/master/src/main/resources/static/docs/index.html)
+- 문서(html) 위치: src/main/resources/static/docs/index.html)
+- build 할 때마다 새로 생성됨.
