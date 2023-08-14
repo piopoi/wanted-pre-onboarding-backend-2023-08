@@ -38,7 +38,7 @@ cd [프로젝트 경로]
 <br>
 
 ## 구현한 API의 동작을 촬영한 데모 영상 링크
-
+[![Video Label](http://img.youtube.com/vi/Y4fhMK7Ihk0/0.jpg)](https://youtu.be/Y4fhMK7Ihk0)
 <br>
 
 ## 구현 방법 및 이유에 대한 간략한 설명
