@@ -31,7 +31,8 @@ cd [프로젝트 경로]
   - docker compose up
 4. [API 명세](https://htmlpreview.github.io/?https://github.com/piopoi/wanted-pre-onboarding-backend/blob/master/src/main/resources/static/docs/index.html) 확인하여 API 호출
 ```
-(ex) 글 조회 URL: http://localhost:8080/post/1
+(ex) 사용자 생성 URL
+http://localhost:8080/member
 ```
 <br>
 
