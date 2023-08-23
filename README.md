@@ -42,10 +42,6 @@ http://localhost:8080/member
 <img src="docs/db_diagram.png" width="300"/>
 <br>
 
-## 구현한 API의 동작을 촬영한 데모 영상 링크
-[![Video Label](http://img.youtube.com/vi/Y4fhMK7Ihk0/0.jpg)](https://youtu.be/Y4fhMK7Ihk0)
-<br>
-
 ## 구현 방법 및 이유에 대한 간략한 설명
 ### 사용 기술: Application & DB
 현재 시점의 stable 중 가장 최신 버전 사용.
